@@ -2,13 +2,14 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
-class RedirectIfAuthenticated
+
+class codigo
 {
     /**
      * Handle an incoming request.
@@ -17,14 +18,12 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        $guards = empty($guards) ? [null] : $guards;
-
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::codigo);
-            }
+        if ($request->session()->has('code')) {
+            return $next($request);
         }
+        
+        return redirect()->route('verificacion');
 
-        return $next($request);
     }
 }
+
